@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
+import { Logo } from '../../components/ui/Logo'
+import { InlineError } from '../../components/ui/ErrorState'
 import { styles } from './Login.styles'
 
 type FormData = {
@@ -35,12 +37,8 @@ export function Login() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {/* Logo */}
         <div className={styles.logoContainer}>
-          <div className={styles.logoWrapper}>
-            <span className={styles.logoIcon}>⏰</span>
-            <h1>Clockwise</h1>
-          </div>
+          <Logo size="lg" />
         </div>
 
         <Card>
@@ -54,29 +52,27 @@ export function Login() {
               </p>
             </div>
 
-            {error && (
-              <div className={styles.errorMessage}>
-                {error}
-              </div>
-            )}
+            {error && <InlineError message={error} />}
 
-            <Input
-              label="Email"
-              type="email"
-              placeholder="Seu email"
-              value={formData.email}
-              onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              required
-            />
+            <div className={styles.inputGroup}>
+              <Input
+                label="Email"
+                type="email"
+                placeholder="Seu email"
+                value={formData.email}
+                onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                required
+              />
 
-            <Input
-              label="Senha"
-              type="password"
-              placeholder="Sua senha"
-              value={formData.password}
-              onChange={e => setFormData(prev => ({ ...prev, password: e.target.value }))}
-              required
-            />
+              <Input
+                label="Senha"
+                type="password"
+                placeholder="Sua senha"
+                value={formData.password}
+                onChange={e => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                required
+              />
+            </div>
 
             <Button
               type="submit"
