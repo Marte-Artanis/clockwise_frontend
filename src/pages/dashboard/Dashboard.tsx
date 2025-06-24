@@ -10,13 +10,13 @@ type Tab = 'timer' | 'history'
 export function Dashboard() {
   const [activeTab, setActiveTab] = useState<Tab>('timer')
   const [isWorking, setIsWorking] = useState(false)
-  const [startTime, setStartTime] = useState<Date | undefined>()
-  const userName = "Usuário" // Isso viria da autenticação
+  const [startTime, setStartTime] = useState<Date | null>(null)
+  const userName = "Usuário" 
   const userInitial = userName.charAt(0)
 
   const handleClockInOut = () => {
     if (isWorking) {
-      setStartTime(undefined)
+      setStartTime(null)
     } else {
       setStartTime(new Date())
     }

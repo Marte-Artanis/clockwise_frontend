@@ -2,10 +2,11 @@ import { twMerge } from 'tailwind-merge'
 
 export const styles = {
   container: twMerge(
-    'space-y-6'
+    'space-y-4 sm:space-y-6'
   ),
   header: twMerge(
-    'flex items-center justify-between'
+    'flex flex-col sm:flex-row sm:items-center sm:justify-between',
+    'gap-4'
   ),
   title: twMerge(
     'text-lg font-medium'
@@ -13,7 +14,8 @@ export const styles = {
   periodSelector: twMerge(
     'flex items-center gap-2',
     'p-1',
-    'bg-secondary/20 rounded-lg'
+    'bg-secondary/20 rounded-lg',
+    'self-start sm:self-auto'
   ),
   periodButton: twMerge(
     'px-3 py-1',
@@ -27,12 +29,12 @@ export const styles = {
     'hover:text-text'
   ),
   grid: twMerge(
-    'grid grid-cols-1 lg:grid-cols-2 gap-6'
+    'grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6'
   ),
   card: twMerge(
-    'p-4',
+    'p-3 sm:p-4',
     'bg-secondary/20 rounded-lg',
-    'space-y-4'
+    'space-y-3 sm:space-y-4'
   ),
   cardHeader: twMerge(
     'flex items-center justify-between'
@@ -41,8 +43,8 @@ export const styles = {
     'text-sm font-medium text-text/70'
   ),
   chartContainer: twMerge(
-    'w-full h-[200px]',
-    '-ml-4' // Compensar o padding do recharts
+    'w-full h-[180px] sm:h-[200px]',
+    '-ml-2 sm:-ml-4' // Compensar o padding do recharts
   ),
   tooltip: twMerge(
     'px-3 py-2',

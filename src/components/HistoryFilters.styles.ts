@@ -2,16 +2,18 @@ import { twMerge } from 'tailwind-merge'
 
 export const styles = {
   container: twMerge(
-    'flex flex-wrap items-center gap-4',
-    'mb-6'
+    'flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-4',
+    'mb-4 sm:mb-6'
   ),
   field: twMerge(
-    'flex flex-col gap-1'
+    'flex flex-col gap-1',
+    'w-full sm:w-auto'
   ),
   label: twMerge(
     'text-sm text-text/50'
   ),
   select: twMerge(
+    'w-full sm:w-auto',
     'bg-white/5',
     'border border-white/10',
     'rounded-lg',
@@ -21,6 +23,7 @@ export const styles = {
     'transition-colors'
   ),
   dateInput: twMerge(
+    'w-full sm:w-auto',
     'bg-white/5',
     'border border-white/10',
     'rounded-lg',

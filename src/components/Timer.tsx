@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 interface TimerProps {
-  startTime?: Date
+  startTime: Date | null
   className?: string
 }
 
@@ -37,7 +37,8 @@ export function Timer({ startTime, className }: TimerProps) {
   return (
     <div 
       className={twMerge(
-        'font-mono text-4xl font-bold',
+        'font-mono font-bold',
+        'text-2xl sm:text-3xl md:text-4xl',
         'transition-all duration-300',
         !startTime && 'opacity-50',
         className

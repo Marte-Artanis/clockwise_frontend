@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts'
+import { ExportButton } from './ExportButton'
 import { styles } from './Stats.styles'
 
 type Period = 'week' | 'month' | 'year'
@@ -30,7 +31,19 @@ const mockData = {
       { range: '6-8h', count: 1 },
       { range: '8-10h', count: 4 },
       { range: '10h+', count: 0 }
-    ]
+    ],
+    records: Array.from({ length: 7 }, (_, i) => {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      return {
+        date: date.toLocaleDateString('pt-BR'),
+        clockIn: '08:30',
+        clockOut: i === 0 ? '-' : '17:00',
+        duration: i === 0 ? '2h 30min' : '8h 30min',
+        status: i === 0 ? 'Em andamento' : 'Finalizado',
+        notes: i === 0 ? '-' : `Registro do dia ${date.toLocaleDateString('pt-BR')}`
+      }
+    })
   },
   month: {
     hours: Array.from({ length: 30 }, (_, i) => ({
@@ -42,7 +55,15 @@ const mockData = {
       { range: '6-8h', count: 10 },
       { range: '8-10h', count: 12 },
       { range: '10h+', count: 3 }
-    ]
+    ],
+    records: Array.from({ length: 30 }, (_, i) => ({
+      date: new Date(2024, 2, i + 1).toLocaleDateString('pt-BR'),
+      clockIn: '08:30',
+      clockOut: '17:00',
+      duration: '8h 30min',
+      status: 'Finalizado',
+      notes: `Registro ${i + 1}`
+    }))
   },
   year: {
     hours: Array.from({ length: 12 }, (_, i) => ({
@@ -54,7 +75,15 @@ const mockData = {
       { range: '140-160h', count: 5 },
       { range: '160-180h', count: 4 },
       { range: '180h+', count: 1 }
-    ]
+    ],
+    records: Array.from({ length: 12 }, (_, i) => ({
+      date: new Date(2024, i, 1).toLocaleDateString('pt-BR'),
+      clockIn: '08:30',
+      clockOut: '17:00',
+      duration: '160h',
+      status: 'Finalizado',
+      notes: `Mês ${i + 1}`
+    }))
   }
 }
 
@@ -85,25 +114,31 @@ export function Stats() {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2 className={styles.title}>Estatísticas</h2>
-        <div className={styles.periodSelector}>
-          <button
-            className={`${styles.periodButton} ${period === 'week' ? styles.periodButtonActive : ''}`}
-            onClick={() => setPeriod('week')}
-          >
-            Semana
-          </button>
-          <button
-            className={`${styles.periodButton} ${period === 'month' ? styles.periodButtonActive : ''}`}
-            onClick={() => setPeriod('month')}
-          >
-            Mês
-          </button>
-          <button
-            className={`${styles.periodButton} ${period === 'year' ? styles.periodButtonActive : ''}`}
-            onClick={() => setPeriod('year')}
-          >
-            Ano
-          </button>
+        <div className="flex items-center gap-4">
+          <div className={styles.periodSelector}>
+            <button
+              className={`${styles.periodButton} ${period === 'week' ? styles.periodButtonActive : ''}`}
+              onClick={() => setPeriod('week')}
+            >
+              Semana
+            </button>
+            <button
+              className={`${styles.periodButton} ${period === 'month' ? styles.periodButtonActive : ''}`}
+              onClick={() => setPeriod('month')}
+            >
+              Mês
+            </button>
+            <button
+              className={`${styles.periodButton} ${period === 'year' ? styles.periodButtonActive : ''}`}
+              onClick={() => setPeriod('year')}
+            >
+              Ano
+            </button>
+          </div>
+          <ExportButton
+            data={mockData[period].records}
+            period={period}
+          />
         </div>
       </div>
 
