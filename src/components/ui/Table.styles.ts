@@ -7,7 +7,8 @@ export const styles = {
   ),
   table: twMerge(
     'w-full',
-    'border-collapse'
+    'border-collapse',
+    'min-w-full table-fixed'
   ),
   thead: twMerge(
     'bg-secondary/20',
@@ -36,10 +37,19 @@ export const styles = {
   ),
   sortButton: twMerge(
     'flex items-center gap-2',
-    'hover:text-text transition-colors'
+    'hover:text-text transition-colors',
+    'w-full'
   ),
   sortIcon: twMerge(
     'w-4 h-4',
     'transition-transform duration-200'
-  )
+  ),
+  // Larguras específicas para cada coluna
+  col: {
+    date: 'w-[120px]',
+    time: 'w-[100px]',
+    duration: 'w-[100px]',
+    status: 'w-[120px]',
+    notes: 'w-auto min-w-[200px]'
+  }
 } 

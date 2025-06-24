@@ -49,7 +49,12 @@ export const styles = {
     'space-y-8'
   ),
   centralArea: twMerge(
-    'max-w-2xl mx-auto',
+    'mx-auto',
+    'flex flex-col items-center gap-8',
+    'w-full max-w-[1200px]'
+  ),
+  timerArea: twMerge(
+    'max-w-2xl w-full',
     'flex flex-col items-center gap-8'
   ),
   tabs: twMerge(

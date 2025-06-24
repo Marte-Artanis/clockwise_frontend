@@ -67,7 +67,7 @@ export function Dashboard() {
           </div>
 
           {activeTab === 'timer' ? (
-            <>
+            <div className={styles.timerArea}>
               <Timer startTime={startTime} className={styles.timer} />
               <p className={styles.status}>
                 {isWorking ? 'Trabalhando' : 'Não registrado'}
@@ -94,7 +94,7 @@ export function Dashboard() {
                   <span className={styles.cardValue}>120h 45m</span>
                 </div>
               </div>
-            </>
+            </div>
           ) : (
             <History />
           )}

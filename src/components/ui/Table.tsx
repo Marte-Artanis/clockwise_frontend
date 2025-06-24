@@ -6,6 +6,7 @@ interface Column<T> {
   header: string
   render?: (item: T) => ReactNode
   sortable?: boolean
+  width?: keyof typeof styles.col
 }
 
 interface TableProps<T> {
@@ -15,6 +16,7 @@ interface TableProps<T> {
   sortKey?: string
   sortDirection?: 'asc' | 'desc'
   emptyMessage?: string
+  onRowClick?: (item: T) => void
 }
 
 export function Table<T>({ 
@@ -23,7 +25,8 @@ export function Table<T>({
   onSort,
   sortKey,
   sortDirection,
-  emptyMessage = 'Nenhum registro encontrado'
+  emptyMessage = 'Nenhum registro encontrado',
+  onRowClick
 }: TableProps<T>) {
   const handleSort = (key: string) => {
     if (onSort && columns.find(col => col.key === key)?.sortable) {
@@ -62,7 +65,10 @@ export function Table<T>({
         <thead className={styles.thead}>
           <tr>
             {columns.map(column => (
-              <th key={column.key} className={styles.th}>
+              <th 
+                key={column.key} 
+                className={`${styles.th} ${column.width ? styles.col[column.width] : ''}`}
+              >
                 <button
                   className={styles.sortButton}
                   onClick={() => handleSort(column.key)}
@@ -87,9 +93,17 @@ export function Table<T>({
             </tr>
           ) : (
             data.map((item, index) => (
-              <tr key={index} className={styles.tr}>
+              <tr 
+                key={index} 
+                className={styles.tr}
+                onClick={() => onRowClick?.(item)}
+                style={{ cursor: onRowClick ? 'pointer' : 'default' }}
+              >
                 {columns.map(column => (
-                  <td key={column.key} className={styles.td}>
+                  <td 
+                    key={column.key} 
+                    className={`${styles.td} ${column.width ? styles.col[column.width] : ''}`}
+                  >
                     {column.render 
                       ? column.render(item)
                       : (item as any)[column.key]
