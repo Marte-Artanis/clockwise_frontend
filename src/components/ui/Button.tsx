@@ -3,16 +3,19 @@ import { Loading } from './Loading'
 import { styles } from './Button.styles'
 import { twMerge } from 'tailwind-merge'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'success' | 'error'
+type ButtonSize = 'sm' | 'md' | 'lg'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
+  size?: ButtonSize
   isLoading?: boolean
 }
 
 export function Button({ 
   children, 
-  variant = 'primary', 
+  variant = 'primary',
+  size = 'md',
   isLoading, 
   className,
   disabled,
@@ -23,6 +26,7 @@ export function Button({
       className={twMerge(
         styles.base,
         styles[variant],
+        styles[size],
         isLoading && styles.loading,
         className
       )}

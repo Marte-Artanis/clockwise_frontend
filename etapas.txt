@@ -558,3 +558,37 @@ Etapas do Projeto Clockwise:
 - Feedback claro
 - Performance primeiro
 
+📝 Observações para Lista de Registros:
+
+1. Integração com Backend:
+   - Endpoint: GET /clock/history
+   - Autenticação: JWT necessário
+   - Formato da resposta: { entries, total_hours }
+
+2. Funcionalidades a Implementar:
+   - Tabela com paginação client-side
+   - Filtros por data
+   - Ordenação por data/duração
+   - Exibição de notas
+   - Cálculo de duração
+
+3. Campos a Exibir:
+   - Data
+   - Hora de entrada
+   - Hora de saída
+   - Duração
+   - Notas (se houver)
+   - Status (em andamento/finalizado)
+
+4. Ações Disponíveis:
+   - Visualizar detalhes
+   - Filtrar por período
+   - Exportar dados (opcional)
+
+5. Considerações de UX:
+   - Loading states
+   - Empty states
+   - Error handling
+   - Feedback visual
+   - Responsividade
+
