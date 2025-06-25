@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Table } from '../../components/ui/Table'
 import { Modal } from '../../components/ui/Modal'
 import { ClockDetails } from '../../components/ClockDetails'
@@ -6,6 +7,7 @@ import { HistoryFilters } from '../../components/HistoryFilters'
 import { Pagination } from '../../components/ui/Pagination'
 import { Stats } from '../../components/Stats'
 import { styles } from './History.styles'
+import { clockService } from '../../services/clock'
 
 // Tipos
 interface ClockEntry {
@@ -25,35 +27,8 @@ interface Filters {
   duration: 'all' | 'short' | 'medium' | 'long'
 }
 
-// Dados mockados
-const mockData: ClockEntry[] = [
-  {
-    id: '1',
-    date: '2024-03-18',
-    clockIn: '09:00',
-    clockOut: '17:00',
-    duration: '8h',
-    notes: 'Projeto Clockwise',
-    status: 'completed'
-  },
-  {
-    id: '2',
-    date: '2024-03-19',
-    clockIn: '08:30',
-    clockOut: null,
-    duration: '2h 30min',
-    status: 'active'
-  },
-  {
-    id: '3',
-    date: '2024-03-17',
-    clockIn: '10:00',
-    clockOut: '18:30',
-    duration: '8h 30min',
-    notes: 'Reuniões e desenvolvimento',
-    status: 'completed'
-  }
-]
+// Os dados reais virão da API; fallback para vetor vazio
+const EMPTY_DATA: ClockEntry[] = []
 
 const ITEMS_PER_PAGE = 10
 
@@ -88,12 +63,39 @@ export function History() {
     console.log('Save:', id, notes)
   }
 
-  // Filtragem dos dados
-  const filteredData = mockData.filter(entry => {
-    // Filtro por data
-    if (filters.startDate && entry.date < filters.startDate) return false
-    if (filters.endDate && entry.date > filters.endDate) return false
+  // Carrega histórico da API
+  const { data: historyData, isLoading } = useQuery({
+    queryKey: ['clock-history', currentPage, filters],
+    queryFn: () =>
+      clockService.getHistory(
+        { page: currentPage, limit: ITEMS_PER_PAGE },
+        {
+          start_date: filters.startDate || undefined,
+          end_date: filters.endDate || undefined
+        }
+      )
+  })
 
+  const apiEntries: ClockEntry[] = (historyData?.data.entries as any[])?.map(e => ({
+    id: e.id,
+    date: e.clockIn.split('T')[0],
+    clockIn: new Date(e.clockIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+    clockOut: e.clockOut ? new Date(e.clockOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : null,
+    duration: (() => {
+      if (!e.clockOut) return '-'
+      const diff = new Date(e.clockOut).getTime() - new Date(e.clockIn).getTime()
+      const totalSec = Math.round(diff / 1000)
+      const h = Math.floor(totalSec / 3600)
+      const m = Math.floor((totalSec % 3600) / 60)
+      const s = totalSec % 60
+      return `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`
+    })(),
+    notes: e.description || '',
+    status: e.clockOut ? 'completed' : 'active'
+  })) || EMPTY_DATA
+
+  // Filtragem local adicional
+  const filteredData = apiEntries.filter(entry => {
     // Filtro por status
     if (filters.status !== 'all' && entry.status !== filters.status) return false
 
@@ -108,7 +110,6 @@ export function History() {
     return true
   })
 
-  // Ordenação dos dados
   const sortedData = [...filteredData].sort((a, b) => {
     if (sortKey === 'date') {
       return sortDirection === 'asc'
@@ -118,7 +119,6 @@ export function History() {
     return 0
   })
 
-  // Calcular dados paginados
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
   const endIndex = startIndex + ITEMS_PER_PAGE
   const paginatedData = sortedData.slice(startIndex, endIndex)
@@ -182,22 +182,70 @@ export function History() {
           onFilterChange={setFilters}
         />
         
-        <Table
-          data={paginatedData}
-          columns={columns}
-          onSort={handleSort}
-          sortKey={sortKey}
-          sortDirection={sortDirection}
-          onRowClick={setSelectedRecord}
-        />
+        {/* Desktop table */}
+        <div className="hidden sm:block overflow-x-auto w-full">
+          {isLoading ? (
+            <p className="text-center py-8">Carregando...</p>
+          ) : (
+            <div className="min-w-[640px]">
+              <Table
+                data={paginatedData}
+                columns={columns}
+                onSort={handleSort}
+                sortKey={sortKey}
+                sortDirection={sortDirection}
+                onRowClick={setSelectedRecord}
+              />
+            </div>
+          )}
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          totalItems={sortedData.length}
-          itemsPerPage={ITEMS_PER_PAGE}
-        />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={sortedData.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+          />
+        </div>
+
+        {/* Mobile card list */}
+        {!isLoading && (
+          <div className="space-y-4 sm:hidden w-full">
+            {paginatedData.length === 0 ? (
+              <p className="text-center py-8 text-text/60">Nenhum registro encontrado</p>
+            ) : (
+              paginatedData.map(entry => (
+                <button
+                  type="button"
+                  key={entry.id}
+                  onClick={() => setSelectedRecord(entry)}
+                  className="w-full text-left bg-secondary/20 rounded-lg p-4 flex flex-col gap-2"
+                >
+                  <div className="flex justify-between text-sm">
+                    <span className="text-text/60">Data</span>
+                    <span>{entry.date}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-text/60">Entrada</span>
+                    <span>{entry.clockIn}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-text/60">Saída</span>
+                    <span>{entry.clockOut ?? '-'}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-text/60">Duração</span>
+                    <span>{entry.duration}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-text/60">Status</span>
+                    <span>{entry.status === 'active' ? 'Em andamento' : 'Finalizado'}</span>
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+        )}
 
         <Modal
           isOpen={!!selectedRecord}

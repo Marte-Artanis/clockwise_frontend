@@ -1,24 +1,25 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 import { Logo } from '../../components/ui/Logo'
 import { InlineError } from '../../components/ui/ErrorState'
-import { styles } from './Login.styles'
+import { styles } from './Register.styles'
 import { authService } from '../../services/auth'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 
-type FormData = {
+interface FormData {
+  name: string
   email: string
   password: string
 }
 
-export function Login() {
+export function Register() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [formData, setFormData] = useState<FormData>({
+    name: '',
     email: '',
     password: ''
   })
@@ -26,7 +27,7 @@ export function Login() {
   const navigate = useNavigate()
   const { setAuth } = useAuth()
 
-  useEffect(()=>{document.title='Clockwise | Login'},[])
+  useEffect(()=>{document.title='Clockwise | Criar conta'},[])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,18 +35,22 @@ export function Login() {
     setError('')
 
     try {
-      const result = await authService.login(formData.email, formData.password)
+      const result = await authService.register(
+        formData.name,
+        formData.email,
+        formData.password
+      )
       setAuth(result.user, result.token)
       navigate('/dashboard')
     } catch (err: any) {
-      setError(err?.response?.data?.message || 'Email ou senha inválidos')
+      setError(err?.response?.data?.message || 'Erro ao registrar usuário')
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <motion.div className={styles.container} initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
+    <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.logoContainer}>
           <Logo size="lg" />
@@ -54,17 +59,22 @@ export function Login() {
         <Card>
           <form onSubmit={handleSubmit} className={styles.formWrapper}>
             <div className={styles.formHeader}>
-              <h2 className={styles.formTitle}>
-                Bem-vindo de volta!
-              </h2>
-              <p className={styles.formSubtitle}>
-                Faça login para continuar
-              </p>
+              <h2 className={styles.formTitle}>Criar conta</h2>
+              <p className={styles.formSubtitle}>Preencha seus dados para começar</p>
             </div>
 
             {error && <InlineError message={error} />}
 
             <div className={styles.inputGroup}>
+              <Input
+                label="Nome"
+                type="text"
+                placeholder="Seu nome completo"
+                value={formData.name}
+                onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                required
+              />
+
               <Input
                 label="Email"
                 type="email"
@@ -77,27 +87,23 @@ export function Login() {
               <Input
                 label="Senha"
                 type="password"
-                placeholder="Sua senha"
+                placeholder="Crie uma senha"
                 value={formData.password}
                 onChange={e => setFormData(prev => ({ ...prev, password: e.target.value }))}
                 required
               />
             </div>
 
-            <Button
-              type="submit"
-              className={styles.submitButton}
-              isLoading={isLoading}
-            >
-              Entrar
+            <Button type="submit" className={styles.submitButton} isLoading={isLoading}>
+              Registrar
             </Button>
           </form>
         </Card>
 
-        <Link to="/register" className={styles.link}>
-          Não tem conta? Criar conta
+        <Link to="/" className={styles.link}>
+          Já tem conta? Fazer login
         </Link>
       </div>
-    </motion.div>
+    </div>
   )
 } 

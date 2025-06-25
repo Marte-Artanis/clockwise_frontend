@@ -9,13 +9,14 @@ export const styles = {
     'animate-fadeIn'
   ),
   container: twMerge(
-    'w-full max-w-lg',
+    'w-full h-full sm:h-auto sm:max-w-lg',
     'bg-secondary/80 backdrop-blur-lg',
-    'rounded-lg',
+    'rounded-none sm:rounded-lg',
     'border border-white/10',
     'shadow-xl',
-    'p-6',
-    'animate-slideUpAndFade'
+    'p-4 sm:p-6',
+    'animate-slideUpAndFade',
+    'flex flex-col'
   ),
   header: twMerge(
     'flex items-center justify-between',
@@ -29,7 +30,8 @@ export const styles = {
     'transition-colors'
   ),
   content: twMerge(
-    'space-y-6'
+    'space-y-6',
+    'flex-1 overflow-y-auto'
   ),
   footer: twMerge(
     'flex items-center justify-end gap-3',

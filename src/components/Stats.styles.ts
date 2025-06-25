@@ -58,5 +58,6 @@ export const styles = {
   ),
   tooltipValue: twMerge(
     'text-sm font-medium text-text'
-  )
+  ),
+  cursorFill: 'rgba(124,58,237,0.1)'
 } 

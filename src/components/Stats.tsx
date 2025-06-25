@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { clockService } from '../services/clock'
 import {
   AreaChart,
   Area,
@@ -14,77 +16,65 @@ import { styles } from './Stats.styles'
 
 type Period = 'week' | 'month' | 'year'
 
-// Mock data - Será substituído por dados reais da API
-const mockData = {
-  week: {
-    hours: [
-      { day: 'Seg', hours: 8 },
-      { day: 'Ter', hours: 8.5 },
-      { day: 'Qua', hours: 7.5 },
-      { day: 'Qui', hours: 9 },
-      { day: 'Sex', hours: 8 },
-      { day: 'Sáb', hours: 4 },
-      { day: 'Dom', hours: 0 }
-    ],
-    distribution: [
-      { range: '4-6h', count: 1 },
-      { range: '6-8h', count: 1 },
-      { range: '8-10h', count: 4 },
-      { range: '10h+', count: 0 }
-    ],
-    records: Array.from({ length: 7 }, (_, i) => {
-      const date = new Date()
-      date.setDate(date.getDate() - i)
-      return {
-        date: date.toLocaleDateString('pt-BR'),
-        clockIn: '08:30',
-        clockOut: i === 0 ? '-' : '17:00',
-        duration: i === 0 ? '2h 30min' : '8h 30min',
-        status: i === 0 ? 'Em andamento' : 'Finalizado',
-        notes: i === 0 ? '-' : `Registro do dia ${date.toLocaleDateString('pt-BR')}`
-      }
+// Helpers para formatar dias/meses
+const weekDayLabels = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+const monthLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+
+function aggregateHours(entries: any[], period: 'week' | 'month' | 'year') {
+  if (period === 'week') {
+    const start = new Date()
+    start.setHours(0, 0, 0, 0)
+    start.setDate(start.getDate() - start.getDay()) // sunday
+
+    const result = Array.from({ length: 7 }, (_, i) => ({ day: weekDayLabels[i], hours: 0 }))
+    entries.forEach(e => {
+      if (!e.clockOut) return
+      const date = new Date(e.clockIn)
+      const idx = date.getDay()
+      const h = (new Date(e.clockOut).getTime() - new Date(e.clockIn).getTime()) / 3600000
+      result[idx].hours += h
     })
-  },
-  month: {
-    hours: Array.from({ length: 30 }, (_, i) => ({
-      day: `${i + 1}`,
-      hours: Math.random() * 4 + 6 // 6-10h
-    })),
-    distribution: [
-      { range: '4-6h', count: 5 },
-      { range: '6-8h', count: 10 },
-      { range: '8-10h', count: 12 },
-      { range: '10h+', count: 3 }
-    ],
-    records: Array.from({ length: 30 }, (_, i) => ({
-      date: new Date(2024, 2, i + 1).toLocaleDateString('pt-BR'),
-      clockIn: '08:30',
-      clockOut: '17:00',
-      duration: '8h 30min',
-      status: 'Finalizado',
-      notes: `Registro ${i + 1}`
-    }))
-  },
-  year: {
-    hours: Array.from({ length: 12 }, (_, i) => ({
-      day: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'][i],
-      hours: Math.floor(Math.random() * 40 + 140) // 140-180h
-    })),
-    distribution: [
-      { range: '120-140h', count: 2 },
-      { range: '140-160h', count: 5 },
-      { range: '160-180h', count: 4 },
-      { range: '180h+', count: 1 }
-    ],
-    records: Array.from({ length: 12 }, (_, i) => ({
-      date: new Date(2024, i, 1).toLocaleDateString('pt-BR'),
-      clockIn: '08:30',
-      clockOut: '17:00',
-      duration: '160h',
-      status: 'Finalizado',
-      notes: `Mês ${i + 1}`
-    }))
+    return result
   }
+  if (period === 'month') {
+    const now = new Date();
+    const totalDays = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+    const result = Array.from({ length: totalDays }, (_, i) => ({ day: `${i+1}`, hours: 0 }))
+    entries.forEach(e=>{
+      if(!e.clockOut) return
+      const d=new Date(e.clockIn);
+      const idx=d.getDate()-1;
+      const h=(new Date(e.clockOut).getTime()-new Date(e.clockIn).getTime())/3600000;
+      result[idx].hours+=h;
+    })
+    return result
+  }
+  // year
+  const result = monthLabels.map((m) => ({ day: m, hours: 0 }))
+  entries.forEach(e=>{
+    if(!e.clockOut) return
+    const d=new Date(e.clockIn);
+    const idx=d.getMonth();
+    const h=(new Date(e.clockOut).getTime()-new Date(e.clockIn).getTime())/3600000;
+    result[idx].hours+=h;
+  })
+  return result
+}
+
+function hoursDistribution(entries: any[]) {
+  let counts = { short:0, medium:0, long:0 }
+  entries.forEach(e=>{
+    if(!e.clockOut) return
+    const h=(new Date(e.clockOut).getTime()-new Date(e.clockIn).getTime())/3600000;
+    if(h<4) counts.short++
+    else if(h<=8) counts.medium++
+    else counts.long++
+  })
+  return [
+    { range:'0-4h', count:counts.short },
+    { range:'4-8h', count:counts.medium },
+    { range:'8h+', count:counts.long }
+  ]
 }
 
 interface CustomTooltipProps {
@@ -109,6 +99,46 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
 
 export function Stats() {
   const [period, setPeriod] = useState<Period>('week')
+
+  const now = new Date()
+  let startDate: string | undefined
+  if (period === 'week') {
+    const start = new Date(now)
+    start.setDate(now.getDate() - 6)
+    start.setHours(0,0,0,0)
+    startDate = start.toISOString().split('T')[0]
+  } else if (period === 'month') {
+    const start = new Date(now.getFullYear(), now.getMonth(), 1)
+    startDate = start.toISOString().split('T')[0]
+  } else if (period === 'year') {
+    const start = new Date(now.getFullYear(), 0, 1)
+    startDate = start.toISOString().split('T')[0]
+  }
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['stats', period],
+    queryFn: () =>
+      clockService.getHistory({ page: 1, limit: 1000 }, { start_date: startDate }),
+  })
+
+  const processed = useMemo(()=>{
+    const entries = (data?.data.entries as any[]) || []
+    const hoursArr = aggregateHours(entries, period)
+    const distribution = hoursDistribution(entries)
+    const records = entries.map(e=>({
+      date: new Date(e.clockIn).toLocaleDateString('pt-BR'),
+      clockIn: new Date(e.clockIn).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}),
+      clockOut: e.clockOut ? new Date(e.clockOut).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '-',
+      duration: e.clockOut ? `${(((new Date(e.clockOut).getTime()-new Date(e.clockIn).getTime())/3600000).toFixed(2))}h` : '-',
+      status: e.clockOut ? 'Finalizado' : 'Em andamento',
+      notes: e.description || '-'
+    }))
+    return { hours: hoursArr, distribution, records }
+  }, [data, period])
+
+  if (isLoading) {
+    return <p className="text-center py-8">Carregando...</p>
+  }
 
   return (
     <div className={styles.container}>
@@ -136,7 +166,7 @@ export function Stats() {
             </button>
           </div>
           <ExportButton
-            data={mockData[period].records}
+            data={processed.records}
             period={period}
           />
         </div>
@@ -149,7 +179,7 @@ export function Stats() {
           </div>
           <div className={styles.chartContainer}>
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={mockData[period].hours}>
+              <AreaChart data={processed.hours}>
                 <defs>
                   <linearGradient id="hoursGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#7C3AED" stopOpacity={0.1}/>
@@ -170,7 +200,7 @@ export function Stats() {
                   axisLine={false}
                   tickFormatter={value => `${value}h`}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: styles.cursorFill }} />
                 <Area
                   type="monotone"
                   dataKey="hours"
@@ -189,7 +219,7 @@ export function Stats() {
           </div>
           <div className={styles.chartContainer}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={mockData[period].distribution}>
+              <BarChart data={processed.distribution}>
                 <XAxis
                   dataKey="range"
                   stroke="#6B7280"
@@ -203,7 +233,7 @@ export function Stats() {
                   tickLine={false}
                   axisLine={false}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: styles.cursorFill }} />
                 <Bar
                   dataKey="count"
                   fill="#7C3AED"

@@ -45,7 +45,7 @@ export const styles = {
   main: twMerge(
     'container mx-auto',
     'px-4 sm:px-6 lg:px-8',
-    'pt-24 pb-8',
+    'pt-24 pb-24 sm:pb-8',
     'space-y-8'
   ),
   centralArea: twMerge(
@@ -58,7 +58,7 @@ export const styles = {
     'flex flex-col items-center gap-8'
   ),
   tabs: twMerge(
-    'flex items-center gap-2',
+    'hidden sm:flex items-center gap-2',
     'p-1',
     'bg-secondary/20 rounded-lg'
   ),

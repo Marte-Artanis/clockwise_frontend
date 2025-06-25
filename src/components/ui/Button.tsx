@@ -1,12 +1,15 @@
-import type { ButtonHTMLAttributes } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 import { Loading } from './Loading'
 import { styles } from './Button.styles'
 import { twMerge } from 'tailwind-merge'
+import { motion } from 'framer-motion'
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'success' | 'error'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type MotionButtonProps = ComponentPropsWithoutRef<typeof motion.button>
+
+interface ButtonProps extends Omit<MotionButtonProps, 'ref'> {
   variant?: ButtonVariant
   size?: ButtonSize
   isLoading?: boolean
@@ -22,7 +25,8 @@ export function Button({
   ...props 
 }: ButtonProps) {
   return (
-    <button
+    <motion.button
+      whileTap={{ scale: 0.95 }}
       className={twMerge(
         styles.base,
         styles[variant],
@@ -39,6 +43,6 @@ export function Button({
           <span>Carregando...</span>
         </>
       ) : children}
-    </button>
+    </motion.button>
   )
 } 

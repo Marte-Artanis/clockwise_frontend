@@ -16,8 +16,6 @@ export const styles = {
     'flex flex-col items-center',
     'mb-12 sm:mb-16'
   ),
-  logoWrapper: "flex items-center gap-3 text-4xl font-bold text-primary",
-  logoIcon: "text-3xl",
   formWrapper: twMerge(
     'space-y-6',
     'p-6 sm:p-8',
@@ -53,7 +51,6 @@ export const styles = {
   ),
   link: twMerge(
     'block text-center text-sm',
-    'mt-4',
     'text-primary hover:underline',
     'animate-fadeIn [animation-delay:500ms]'
   )
