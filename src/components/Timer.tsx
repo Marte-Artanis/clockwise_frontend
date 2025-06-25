@@ -19,7 +19,7 @@ export function Timer({ startTime, className }: TimerProps) {
     const updateTimer = () => {
       const now = new Date()
       const diff = now.getTime() - startTime.getTime()
-      
+
       const hours = Math.floor(diff / (1000 * 60 * 60))
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       const seconds = Math.floor((diff % (1000 * 60)) / 1000)
@@ -36,14 +36,6 @@ export function Timer({ startTime, className }: TimerProps) {
   }, [startTime])
 
   return (
-    <div 
-      className={twMerge(
-        styles.timer,
-        !startTime && styles.inactive,
-        className
-      )}
-    >
-      {time}
-    </div>
+    <div className={twMerge(styles.timer, !startTime && styles.inactive, className)}>{time}</div>
   )
-} 
+}

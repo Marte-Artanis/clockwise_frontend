@@ -12,4 +12,4 @@ export function PrivateRoute({ children }: Props) {
     return <Navigate to="/" replace />
   }
   return children
-} 
+}

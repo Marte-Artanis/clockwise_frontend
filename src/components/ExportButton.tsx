@@ -39,9 +39,12 @@ export function ExportButton({ data, period }: ExportButtonProps) {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     const url = URL.createObjectURL(blob)
-    
+
     link.setAttribute('href', url)
-    link.setAttribute('download', `clockwise_${period}_${new Date().toISOString().split('T')[0]}.csv`)
+    link.setAttribute(
+      'download',
+      `clockwise_${period}_${new Date().toISOString().split('T')[0]}.csv`
+    )
     link.style.visibility = 'hidden'
     document.body.appendChild(link)
     link.click()
@@ -53,20 +56,20 @@ export function ExportButton({ data, period }: ExportButtonProps) {
     try {
       const doc = new jsPDF() as jsPDFType & { autoTable: typeof autoTable }
       const pageWidth = doc.internal.pageSize.getWidth()
-      
+
       // Título
       doc.setFontSize(20)
       doc.text('Relatório Clockwise', pageWidth / 2, 20, { align: 'center' })
-      
+
       // Subtítulo com período
       doc.setFontSize(12)
       const periodText = {
         week: 'Relatório Semanal',
         month: 'Relatório Mensal',
-        year: 'Relatório Anual'
+        year: 'Relatório Anual',
       }[period]
       doc.text(periodText, pageWidth / 2, 30, { align: 'center' })
-      
+
       // Data do relatório
       const today = new Date().toLocaleDateString('pt-BR')
       doc.text(`Gerado em: ${today}`, pageWidth / 2, 40, { align: 'center' })
@@ -79,7 +82,7 @@ export function ExportButton({ data, period }: ExportButtonProps) {
         record.clockOut,
         record.duration,
         record.status,
-        record.notes
+        record.notes,
       ])
 
       autoTable(doc, {
@@ -91,16 +94,16 @@ export function ExportButton({ data, period }: ExportButtonProps) {
           fontSize: 8,
           cellPadding: 2,
           overflow: 'linebreak',
-          cellWidth: 'auto'
+          cellWidth: 'auto',
         },
         headStyles: {
           fillColor: [124, 58, 237],
           textColor: [255, 255, 255],
-          fontStyle: 'bold'
+          fontStyle: 'bold',
         },
         alternateRowStyles: {
-          fillColor: [245, 245, 245]
-        }
+          fillColor: [245, 245, 245],
+        },
       })
 
       doc.save(`clockwise_${period}_${new Date().toISOString().split('T')[0]}.pdf`)
@@ -137,9 +140,7 @@ export function ExportButton({ data, period }: ExportButtonProps) {
 
       {isOpen && (
         <div className={styles.menu} ref={menuRef}>
-          <div className={styles.menuHeader}>
-            Formato
-          </div>
+          <div className={styles.menuHeader}>Formato</div>
           <button className={styles.menuItem} onClick={exportToCSV}>
             <svg
               className="w-4 h-4"
@@ -182,4 +183,4 @@ export function ExportButton({ data, period }: ExportButtonProps) {
       )}
     </div>
   )
-} 
+}

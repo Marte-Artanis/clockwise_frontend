@@ -18,24 +18,9 @@ export const styles = {
     'animate-slideUpAndFade',
     'flex flex-col'
   ),
-  header: twMerge(
-    'flex items-center justify-between',
-    'mb-6'
-  ),
-  title: twMerge(
-    'text-xl font-semibold text-text'
-  ),
-  closeButton: twMerge(
-    'text-text/50 hover:text-text',
-    'transition-colors'
-  ),
-  content: twMerge(
-    'space-y-6',
-    'flex-1 overflow-y-auto'
-  ),
-  footer: twMerge(
-    'flex items-center justify-end gap-3',
-    'mt-8 pt-6',
-    'border-t border-white/10'
-  )
-} 
+  header: twMerge('flex items-center justify-between', 'mb-6'),
+  title: twMerge('text-xl font-semibold text-text'),
+  closeButton: twMerge('text-text/50 hover:text-text', 'transition-colors'),
+  content: twMerge('space-y-6', 'flex-1 overflow-y-auto'),
+  footer: twMerge('flex items-center justify-end gap-3', 'mt-8 pt-6', 'border-t border-white/10'),
+}

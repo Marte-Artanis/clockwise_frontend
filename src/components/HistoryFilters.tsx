@@ -16,7 +16,7 @@ export function HistoryFilters({ filters, onFilterChange }: HistoryFiltersProps)
   const handleChange = (key: keyof Filters, value: string) => {
     onFilterChange({
       ...filters,
-      [key]: value
+      [key]: value,
     })
   }
 
@@ -70,4 +70,4 @@ export function HistoryFilters({ filters, onFilterChange }: HistoryFiltersProps)
       </div>
     </div>
   )
-} 
+}

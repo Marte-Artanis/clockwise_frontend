@@ -35,12 +35,12 @@ export function Dashboard() {
   // Mutations de clock-in e clock-out
   const clockInMutation = useMutation({
     mutationFn: () => clockService.clockIn(),
-    onSuccess: invalidate
+    onSuccess: invalidate,
   })
 
   const clockOutMutation = useMutation({
     mutationFn: () => clockService.clockOut(),
-    onSuccess: invalidate
+    onSuccess: invalidate,
   })
 
   const handleClockInOut = () => {
@@ -52,16 +52,24 @@ export function Dashboard() {
   }
 
   // Estatísticas
-  const { data: todayStats } = useQuery({ queryKey: ['clock-today'], queryFn: clockService.getToday })
+  const { data: todayStats } = useQuery({
+    queryKey: ['clock-today'],
+    queryFn: clockService.getToday,
+  })
   const { data: weekStats } = useQuery({ queryKey: ['clock-week'], queryFn: clockService.getWeek })
-  const { data: monthStats } = useQuery({ queryKey: ['clock-month'], queryFn: clockService.getMonth })
+  const { data: monthStats } = useQuery({
+    queryKey: ['clock-month'],
+    queryFn: clockService.getMonth,
+  })
 
   // Usuário real do contexto
   const { user } = useAuth()
   const userName = user?.name ?? 'Usuário'
   const userInitial = userName.charAt(0)
 
-  useEffect(()=>{document.title='Clockwise | Dashboard'},[])
+  useEffect(() => {
+    document.title = 'Clockwise | Dashboard'
+  }, [])
 
   // Formatar total de horas em HHh MMm SSs
   const formatHMS = (h?: number) => {
@@ -70,11 +78,16 @@ export function Dashboard() {
     const hrs = Math.floor(totalSec / 3600)
     const mins = Math.floor((totalSec % 3600) / 60)
     const secs = totalSec % 60
-    return `${String(hrs).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m ${String(secs).padStart(2,'0')}s`
+    return `${String(hrs).padStart(2, '0')}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`
   }
 
   return (
-    <motion.div className={styles.container} initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
+    <motion.div
+      className={styles.container}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <Logo size="sm" />
@@ -159,4 +172,4 @@ export function Dashboard() {
       <BottomNav active={activeTab} onChange={setActiveTab} />
     </motion.div>
   )
-} 
+}

@@ -15,15 +15,15 @@
   .btn {
     @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
   }
-  
+
   .btn-primary {
     @apply btn bg-primary hover:bg-primary/90 text-white;
   }
-  
+
   .btn-secondary {
     @apply btn bg-secondary hover:bg-secondary/90 text-white;
   }
-  
+
   .btn-ghost {
     @apply btn border-2 border-primary text-primary hover:bg-primary/10;
   }

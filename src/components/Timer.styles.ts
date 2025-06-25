@@ -6,5 +6,5 @@ export const styles = {
     'text-2xl sm:text-3xl md:text-4xl',
     'transition-all duration-300'
   ),
-  inactive: twMerge('opacity-50')
-} 
+  inactive: twMerge('opacity-50'),
+}

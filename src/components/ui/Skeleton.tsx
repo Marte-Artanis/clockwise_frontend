@@ -10,21 +10,12 @@ interface SkeletonProps {
 }
 
 export function Skeleton({ variant = 'text', className, count = 1 }: SkeletonProps) {
-  const baseStyle = twMerge(
-    styles.base,
-    styles[variant],
-    className
-  )
+  const baseStyle = twMerge(styles.base, styles[variant], className)
 
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (
-        <div
-          key={index}
-          className={baseStyle}
-          role="status"
-          aria-label="Carregando..."
-        />
+        <div key={index} className={baseStyle} role="status" aria-label="Carregando..." />
       ))}
     </>
   )
@@ -48,4 +39,4 @@ export function SkeletonCard(props: Omit<SkeletonProps, 'variant'>) {
 
 export function SkeletonButton(props: Omit<SkeletonProps, 'variant'>) {
   return <Skeleton variant="button" {...props} />
-} 
+}

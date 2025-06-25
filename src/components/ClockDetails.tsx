@@ -40,7 +40,7 @@ export function ClockDetails({ entry, onClose, onDelete, onSave }: ClockDetailsP
       weekday: 'long',
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     })
   }
 
@@ -48,9 +48,7 @@ export function ClockDetails({ entry, onClose, onDelete, onSave }: ClockDetailsP
     <div className={styles.grid}>
       <div className={styles.field}>
         <span className={styles.label}>Data</span>
-        <span className={styles.value}>
-          {formatDate(entry.date)}
-        </span>
+        <span className={styles.value}>{formatDate(entry.date)}</span>
       </div>
 
       <div className={styles.field}>
@@ -86,9 +84,7 @@ export function ClockDetails({ entry, onClose, onDelete, onSave }: ClockDetailsP
             placeholder="Adicione suas notas aqui..."
           />
         ) : (
-          <span className={styles.value}>
-            {notes || 'Nenhuma nota adicionada'}
-          </span>
+          <span className={styles.value}>{notes || 'Nenhuma nota adicionada'}</span>
         )}
       </div>
 
@@ -107,13 +103,10 @@ export function ClockDetails({ entry, onClose, onDelete, onSave }: ClockDetailsP
             Editar Notas
           </Button>
         )}
-        <button 
-          className={styles.deleteButton}
-          onClick={handleDelete}
-        >
+        <button className={styles.deleteButton} onClick={handleDelete}>
           Excluir Registro
         </button>
       </div>
     </div>
   )
-} 
+}

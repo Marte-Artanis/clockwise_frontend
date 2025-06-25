@@ -1,34 +1,19 @@
 import { twMerge } from 'tailwind-merge'
 
 export const styles = {
-  grid: twMerge(
-    'grid grid-cols-2 gap-6'
-  ),
-  field: twMerge(
-    'flex flex-col gap-1'
-  ),
-  label: twMerge(
-    'text-sm text-text/50'
-  ),
-  value: twMerge(
-    'text-text'
-  ),
+  grid: twMerge('grid grid-cols-2 gap-6'),
+  field: twMerge('flex flex-col gap-1'),
+  label: twMerge('text-sm text-text/50'),
+  value: twMerge('text-text'),
   status: {
-    active: twMerge(
-      'text-sm px-2 py-1 rounded-full',
-      'bg-accent/20 text-accent',
-      'inline-block'
-    ),
+    active: twMerge('text-sm px-2 py-1 rounded-full', 'bg-accent/20 text-accent', 'inline-block'),
     completed: twMerge(
       'text-sm px-2 py-1 rounded-full',
       'bg-primary/20 text-primary',
       'inline-block'
-    )
+    ),
   },
-  notes: twMerge(
-    'col-span-2',
-    'flex flex-col gap-1'
-  ),
+  notes: twMerge('col-span-2', 'flex flex-col gap-1'),
   notesInput: twMerge(
     'w-full',
     'bg-white/5',
@@ -40,12 +25,6 @@ export const styles = {
     'focus:outline-none focus:border-primary',
     'transition-colors'
   ),
-  actions: twMerge(
-    'col-span-2',
-    'flex items-center gap-3'
-  ),
-  deleteButton: twMerge(
-    'text-sm text-error/70 hover:text-error',
-    'transition-colors'
-  )
-} 
+  actions: twMerge('col-span-2', 'flex items-center gap-3'),
+  deleteButton: twMerge('text-sm text-error/70 hover:text-error', 'transition-colors'),
+}

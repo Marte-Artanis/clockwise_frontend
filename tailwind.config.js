@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -19,9 +16,9 @@ export default {
         mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {
-        'title': '24px',
-        'subtitle': '20px',
-        'body': '14px',
+        title: '24px',
+        subtitle: '20px',
+        body: '14px',
       },
       fontWeight: {
         normal: '400',
@@ -30,9 +27,9 @@ export default {
         bold: '700',
       },
       animation: {
-        'fadeIn': 'fadeIn 0.5s ease-out',
+        fadeIn: 'fadeIn 0.5s ease-out',
         'slide-up': 'slideUp 0.3s ease-out',
-        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+        shake: 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
       },
       keyframes: {
         fadeIn: {
@@ -53,4 +50,4 @@ export default {
     },
   },
   plugins: [],
-} 
+}

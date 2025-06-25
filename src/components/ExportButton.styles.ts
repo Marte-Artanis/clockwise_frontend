@@ -32,14 +32,6 @@ export const styles = {
     'hover:bg-white/5',
     'hover:text-text'
   ),
-  menuDivider: twMerge(
-    'h-px',
-    'my-1',
-    'bg-white/10'
-  ),
-  menuHeader: twMerge(
-    'px-3 sm:px-4 py-2',
-    'text-xs font-medium text-text/50',
-    'uppercase'
-  )
-} 
+  menuDivider: twMerge('h-px', 'my-1', 'bg-white/10'),
+  menuHeader: twMerge('px-3 sm:px-4 py-2', 'text-xs font-medium text-text/50', 'uppercase'),
+}

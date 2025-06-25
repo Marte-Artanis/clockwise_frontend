@@ -16,5 +16,5 @@ export const styles = {
     'hover:text-text',
     'transition-colors'
   ),
-  itemActive: twMerge('text-primary')
-} 
+  itemActive: twMerge('text-primary'),
+}

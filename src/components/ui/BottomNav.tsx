@@ -13,7 +13,7 @@ export function BottomNav({ active, onChange }: Props) {
       <button
         className={active === 'timer' ? `${styles.item} ${styles.itemActive}` : styles.item}
         onClick={() => onChange('timer')}
-        aria-current={active==='timer'? 'page': undefined}
+        aria-current={active === 'timer' ? 'page' : undefined}
         aria-label="Timer"
       >
         <svg
@@ -35,7 +35,7 @@ export function BottomNav({ active, onChange }: Props) {
       <button
         className={active === 'history' ? `${styles.item} ${styles.itemActive}` : styles.item}
         onClick={() => onChange('history')}
-        aria-current={active==='history'? 'page': undefined}
+        aria-current={active === 'history' ? 'page' : undefined}
         aria-label="Histórico"
       >
         <svg
@@ -56,4 +56,4 @@ export function BottomNav({ active, onChange }: Props) {
       </button>
     </nav>
   )
-} 
+}

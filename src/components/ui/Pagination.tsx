@@ -13,7 +13,7 @@ export function Pagination({
   totalPages,
   onPageChange,
   totalItems,
-  itemsPerPage
+  itemsPerPage,
 }: PaginationProps) {
   const startItem = (currentPage - 1) * itemsPerPage + 1
   const endItem = Math.min(currentPage * itemsPerPage, totalItems)
@@ -62,9 +62,11 @@ export function Pagination({
           </svg>
         </button>
 
-        {pagesWithEllipsis.map((page, index) => (
+        {pagesWithEllipsis.map((page, index) =>
           page === '...' ? (
-            <span key={`ellipsis-${index}`} className={styles.pageInfo}>...</span>
+            <span key={`ellipsis-${index}`} className={styles.pageInfo}>
+              ...
+            </span>
           ) : (
             <button
               key={page}
@@ -77,7 +79,7 @@ export function Pagination({
               {page}
             </button>
           )
-        ))}
+        )}
 
         <button
           className={styles.pageButton}
@@ -101,4 +103,4 @@ export function Pagination({
       </div>
     </div>
   )
-} 
+}

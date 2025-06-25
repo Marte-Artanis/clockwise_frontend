@@ -15,14 +15,14 @@ interface ButtonProps extends Omit<MotionButtonProps, 'ref'> {
   isLoading?: boolean
 }
 
-export function Button({ 
-  children, 
+export function Button({
+  children,
   variant = 'primary',
   size = 'md',
-  isLoading, 
+  isLoading,
   className,
   disabled,
-  ...props 
+  ...props
 }: ButtonProps) {
   return (
     <motion.button
@@ -42,7 +42,9 @@ export function Button({
           <Loading size="sm" />
           <span>Carregando...</span>
         </>
-      ) : children}
+      ) : (
+        children
+      )}
     </motion.button>
   )
-} 
+}

@@ -14,11 +14,7 @@ interface InlineErrorProps {
   message: string
 }
 
-export function ErrorState({ 
-  title = 'Ops, algo deu errado!',
-  message,
-  action
-}: ErrorStateProps) {
+export function ErrorState({ title = 'Ops, algo deu errado!', message, action }: ErrorStateProps) {
   return (
     <div className={styles.container}>
       <span className={styles.icon}>⚠️</span>
@@ -41,4 +37,4 @@ export function InlineError({ message }: InlineErrorProps) {
       {message}
     </p>
   )
-} 
+}

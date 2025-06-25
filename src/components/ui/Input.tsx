@@ -8,29 +8,16 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ReactNode
 }
 
-export function Input({
-  label,
-  error,
-  icon,
-  className,
-  disabled,
-  ...props
-}: InputProps) {
+export function Input({ label, error, icon, className, disabled, ...props }: InputProps) {
   return (
     <div className={styles.container}>
-      {label && (
-        <label className={styles.label}>
-          {label}
-        </label>
-      )}
-      
+      {label && <label className={styles.label}>{label}</label>}
+
       <div className="relative">
         {icon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text/50">
-            {icon}
-          </div>
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text/50">{icon}</div>
         )}
-        
+
         <input
           className={twMerge(
             styles.input,
@@ -44,11 +31,7 @@ export function Input({
         />
       </div>
 
-      {error && (
-        <span className={styles.error}>
-          {error}
-        </span>
-      )}
+      {error && <span className={styles.error}>{error}</span>}
     </div>
   )
-} 
+}

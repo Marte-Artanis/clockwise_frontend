@@ -46,4 +46,4 @@ export function Toast({ message, type, duration = 3000, onClose }: ToastProps) {
 
 export function ToastContainer({ children }: { children: React.ReactNode }) {
   return <div className={styles.container}>{children}</div>
-} 
+}
