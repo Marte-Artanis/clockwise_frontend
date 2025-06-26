@@ -9,6 +9,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { clockService } from '../../services/clock'
 import { useAuth } from '../../contexts/AuthContext'
 import { BottomNav } from '../../components/ui/BottomNav'
+import { useNavigate } from 'react-router-dom'
 
 type Tab = 'timer' | 'history'
 
@@ -63,7 +64,8 @@ export function Dashboard() {
   })
 
   // Usuário real do contexto
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
   const userName = user?.name ?? 'Usuário'
   const userInitial = userName.charAt(0)
 
@@ -97,7 +99,13 @@ export function Dashboard() {
             <div className={styles.userAvatar}>{userInitial}</div>
             <span className={styles.userName}>Olá, {userName}</span>
           </div>
-          <button className={styles.logoutButton}>
+          <button
+            className={styles.logoutButton}
+            onClick={() => {
+              logout()
+              navigate('/')
+            }}
+          >
             <span>Sair</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"

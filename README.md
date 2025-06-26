@@ -1,54 +1,66 @@
-# React + TypeScript + Vite
+# ⏰ Clockwise Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Single-Page Application built with **React**, **Vite**, **TypeScript** and **Tailwind CSS**. Consumers the Clockwise REST API to let users clock in/out and visualise statistics.
 
-Currently, two official plugins are available:
+## 🚀 Running Locally
+```bash
+npm install                    # install deps
+# create .env with the API URL the SPA should hit
+echo "VITE_API_URL=http://localhost:3333" > .env
+npm run dev                    # Vite dev server at :5173
+```
+When the backend runs inside Docker (see parent README), keep `VITE_API_URL=http://localhost:3333`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🏗️ Scripts
+| Command | What it does |
+|---------|--------------|
+| `npm run dev` | Start Vite in development mode (HMR) |
+| `npm run build` | Produce production bundle in `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm test` | Run unit tests with Vitest + React Testing Library |
+| `npm run lint` | Lint source code |
+| `npm run format` | Format code with Prettier |
 
-## Expanding the ESLint configuration
+## 🧪 Automated Tests
+* **Vitest** & **@testing-library/react** for unit/UI tests
+* Tests are located in `src/__tests__/` and co-located folders.
+* `vitest.setup.ts` configures jsdom, React Testing Library and polyfills.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📁 Important Folders
+| Path | Purpose |
+|------|---------|
+| `src/components/` | Reusable UI components (Button, Modal, Table, …) |
+| `src/pages/` | Route-level pages (Login, Dashboard, History) |
+| `src/services/` | API wrappers (auth, clock) |
+| `src/contexts/` | React Contexts (AuthContext, …) |
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🖥️ Production Build via Docker
+The `Dockerfile` performs a multi-stage build:
+1. Node 18-alpine installs deps and runs `npm run build`.
+2. A slim runtime image serves the static bundle with `serve` at port **4173**.
+
+In the provided `clockwise-api/docker-compose.yml`, this image is exposed on host port **5173**.
+
+> Alternatively you can build/run the SPA standalone with: `npm run build && serve -s dist`
+
+## 🔐 Environment Variables
+The SPA reads env vars at build time (prefix `VITE_`).
+| Key | Purpose | Default |
+|-----|---------|---------|
+| `VITE_API_URL` | Base URL of Clockwise API | http://localhost:3333 |
+
+## 📂 Folder Structure
+```
+clockwise-frontend/
+├── src/
+│   ├── components/   # Reusable UI widgets
+│   ├── pages/        # Route-level screens
+│   ├── contexts/     # React Context providers
+│   ├── services/     # API wrappers (auth, clock)
+│   ├── __tests__/    # Vitest test files
+│   └── main.tsx      # App entry
+└── public/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+---
+Front-end of the Clockwise challenge — crafted with ⚡ by Milena.
