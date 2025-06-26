@@ -4,8 +4,8 @@
 
 ## Backend (clockwise-backend)
 
-- [ ] Configurar **ESLint** para o pacote backend (pode reutilizar a flat-config do frontend ou usar @eslint/eslintrc).
-- [ ] Adicionar **Prettier** (arquivo `.prettierrc` + script `format`).
+- [x] Configurar **ESLint** para o pacote backend (flat-config estrita + tests warn).
+- [x] Adicionar **Prettier** (arquivo `.prettierrc` + script `format`).
 - [ ] (Nice to have) Incluir Husky + lint-staged para rodar lint/format nos commits.
 
 ## Frontend (clockwise-frontend)
@@ -14,7 +14,7 @@
   - Render + interação do **Timer**
   - Abertura e funcionamento do **Modal** em History
   - Componente **Stats** (mudança de período, tooltip)
-- [ ] Adicionar **Prettier** (e compartilhar config com backend).
+- [x] Adicionar **Prettier** (config compartilhada com backend).
 - [ ] Criar **Dockerfile** e service no `docker-compose.yml` para servir o build (ex.: nginx ou `vite preview`).
 
 ## Entrega / Documentação
