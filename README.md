@@ -2,6 +2,12 @@
 
 Single-Page Application built with **React**, **Vite**, **TypeScript** and **Tailwind CSS**. Consumers the Clockwise REST API to let users clock in/out and visualise statistics.
 
+> This project lives in its own repository and is designed to work together with the API repo [`backend-clockwise`](https://github.com/Marte-Artanis/backend-clockwise). Clone both side-by-side for local integration.
+
+## 🎨 Figma Prototype
+All UI decisions are based on the public Figma redesign:
+<https://www.figma.com/design/MJFWFugjID3qZcTQgqvK8I/ClockWise?m=auto&t=sdVGOBTL3CpBElLL-6>
+
 ## 🚀 Running Locally
 ```bash
 npm install                    # install deps
@@ -9,7 +15,7 @@ npm install                    # install deps
 echo "VITE_API_URL=http://localhost:3333" > .env
 npm run dev                    # Vite dev server at :5173
 ```
-When the backend runs inside Docker (see parent README), keep `VITE_API_URL=http://localhost:3333`.
+When the backend runs inside `backend-clockwise/docker-compose.yml`, keep `VITE_API_URL=http://localhost:3333`.
 
 ## 🏗️ Scripts
 | Command | What it does |
